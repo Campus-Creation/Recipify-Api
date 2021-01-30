@@ -6,7 +6,10 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
-        "laravel/lumen-framework": "^8.0"
+        "donatello-za/rake-php-plus": "^1.0",
+        "laravel/lumen-framework": "^8.0",
+        "statickidz/php-google-translate-free": "^1.1",
+      "ext-json": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

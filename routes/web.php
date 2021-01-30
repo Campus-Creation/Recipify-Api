@@ -17,4 +17,5 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 $router->get('/caca', 'MyController@test');
+$router->get('/pipi', 'MyController@test2');
 $router->get('getproduct/{barCode}','MyController@getProduct');
