@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use DonatelloZa\RakePlus\RakePlus;
-use Statickidz\GoogleTranslate;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use function MongoDB\BSON\toJSON;
 
 class MyController extends Controller
@@ -19,17 +18,24 @@ class MyController extends Controller
     }
     public function test()
     {
-        return "caca";
+        $trans = new GoogleTranslate();
+	$trans->setSource('en');
+	$trans->setTarget('fr');
+	//return "caca";
+	return $trans->translate("My poo");
     }
     public function translateCat($cat): array
     {
         $source='en';
         $target='fr';
-        $trans = new GoogleTranslate();
+	$trans = new GoogleTranslate();
+	$trans->setSource($source);
+	$trans->setTarget($target);
         $stack = array();
         for($i=0;$i<count($cat);$i++){
             $txt=ltrim($cat[$i], 'en:');
-            $result = $trans->translate($source, $target, $txt);
+		$txt =ltrim($txt,'fr:');
+            $result = $trans->translate($txt);
             array_push($stack,$result);
         }
         return $stack;
@@ -84,22 +90,15 @@ class MyController extends Controller
             $name = $this->realName($cat);
 
         }
-        else return response()->json(['Status'=>'Produit Non Trouvé']);
+        else return response()->json(['Status'=>404]);
         return response()->json(['Nom du produit'=>$pName,'Url_Image'=>$imageUrl,'Categorie'=>$cat, 'nutriscore'=>$nutriscore, 'energy-kcal'=>$kcal, 'VraiNom'=>$name]);
     }
     public function getRecipe($listeenstring){
-        return "caca en construction";
+        return getcwd();
     }
     private function stringToList($liste){ //
 
     }
-    public function test2(){
-
-        $text = "The most Important thing i have learn this year is chess. chess changed my life !";
-        $rake = RakePlus::create($text, 'en_US');
-        $phrase_scores = $rake->sortByScore('desc')->scores();
-//        return "pipi";
-        print_r($phrase_scores);
-    }
+   
     //
 }
