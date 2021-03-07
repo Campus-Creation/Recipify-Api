@@ -19,3 +19,6 @@ $router->get('/', function () use ($router) {
 $router->get('/caca', 'MyController@test');
 $router->get('/pipi', 'MyController@test2');
 $router->get('getproduct/{barCode}','MyController@getProduct');
+$router->get('/bonjour/{nom}','MyController@bonjour');
+$router->get('/search/{input}', 'MyController@search');
+$router->get('/getrecipe/{id}', 'MyController@getRecipe');

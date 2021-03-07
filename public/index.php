@@ -10,7 +10,7 @@
 | is ready to receive HTTP / Console requests from the environment.
 |
 */
-
+ini_set('display_errors', 0);
 $app = require __DIR__.'/../bootstrap/app.php';
 
 /*
@@ -24,5 +24,10 @@ $app = require __DIR__.'/../bootstrap/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-
-$app->run();
+try {
+    $app->run();
+} catch(\Exception $e) {
+    echo "<pre>";
+    echo $e;
+    echo "</pre>";
+}
