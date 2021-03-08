@@ -121,24 +121,69 @@ class MyController extends Controller
         $recette = app('db')->select("SELECT * FROM recette WHERE id = '$id'")[0];
         return response()->json(['status'=>200, 'recette'=>$recette]);
     }
+
+
+
     public function search($input){
         $input = urldecode($input);
         $results = app('db')->select("SELECT image, nom FROM ingredient WHERE nom = '$input'");
-        if(count($results)>0) return response()->json(['status'=>200,'ingredient'=>$results[0]]);
+        if(count($results)>0){
+            $nom = $results[0]->nom;
+            $image = $results[0]->image;
+            return response()->json(['status'=>200,'ingredient'=>['real_name'=>$nom, 'url_image'=>$image]]);
+        }
         $wordlist = file("wordlist.txt");
         $LR = array();
         for($i = 0; $i < count($wordlist);$i++){
-            if(levenshtein(urlencode(strtolower(str_replace("\n","",$wordlist[$i]))),urlencode(strtolower($input)),1,3,1)<3){
+            if(((str_starts_with(str_replace("\n","",$wordlist[$i]), $input))||(levenshtein(urlencode(strtolower(str_replace("\n","",$wordlist[$i]))),urlencode(strtolower($input)),1,3,1)<3))&&(count($LR)<=15)){
                 $nom=str_replace("\n","",$wordlist[$i]);
                 $image = app('db')->select("SELECT image FROM ingredient WHERE nom = '$nom'")[0]->image;
-                array_push($LR, ['image'=>$image,'nom'=>str_replace("\n","",$wordlist[$i])]);
+                array_push($LR, ['image'=>$image,'real_name'=>str_replace("\n","",$wordlist[$i])]);
             }
         }
         return response()->json(['status'=>200,'Potential_results'=>$LR, 'input'=>urldecode($input)]);
     }
-    private function stringToList($liste){ //
+    private function stringToList($input){
+        return explode(",", $input);
+    }
+    public function searchRecipe($products, $cat, $page){
+        $cat_ref = ['Entrées'=>0,'Plats'=>1,'Desserts'=>2,'Amuses bouches'=>3, 'Sauces'=>4, 'Accompagnements'=>5, 'Boissons'=>6];
+        if(str_contains($products, ",")){
+            $produits = $this->stringToList($products);
+            $n_prod = count($produits);
+        }
+        else $n_prod = 1;
+        if($cat != 'all') {
+            $cats = $this->stringToList($cat);
+            $n_cats = count($cats);
+        }
+        else $n_cats = 1;
+        $query = "SELECT * FROM recette WHERE (";
+        if($n_prod>1){
+            for($i=0; $i<$n_prod; $i++){
+                if($i>0) $query.="AND ";
+                $query.="noms_ingredients LIKE '%".urldecode($produits[$i])."%' ";
+            }
+        }
+        else $query.="noms_ingredients LIKE '%".urldecode($products)."%'";
+        $query.=")";
+        if($n_cats>1){
+            $query.=" AND (";
+            for($i = 0; $i < $n_cats; $i++){
+                if($i>0) $query .= "OR ";
+                $query.="categorie_id = ".$cat_ref[$cats[$i]]." ";
+            }
+            $query.=")";
+        }
+        $query.=";";
+        $results = app('db')->select($query);
+        $return = array_slice($results, $page*10, 10);
+        return response()->json(['status'=>200, 'nbr_results'=>count($results),'recettes'=>$return]);
+
+
 
     }
+
     public function bonjour($nom){
         return "Bonjour ".$nom." !\n passes une bonne journée !";
     }

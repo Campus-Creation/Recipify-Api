@@ -22,3 +22,4 @@ $router->get('getproduct/{barCode}','MyController@getProduct');
 $router->get('/bonjour/{nom}','MyController@bonjour');
 $router->get('/search/{input}', 'MyController@search');
 $router->get('/getrecipe/{id}', 'MyController@getRecipe');
+$router->get('/searchrecipe/{products}/{cat}/{page}', 'MyController@searchRecipe');
