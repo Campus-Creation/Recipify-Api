@@ -557,6 +557,7 @@ coquelet
 coquelicot
 coquille saint-jacques
 coquillettes
+crème fraiche
 daim
 dakatine
 danette
@@ -1082,6 +1083,7 @@ jus de rôti
 jus de tomates
 jus de veau
 jus exotique
+jus Multifruits
 kadaif
 kaki
 kale
@@ -1860,6 +1862,7 @@ riz soufflé
 riz surinam
 riz thaï
 Riz, céréales
+céréales
 rocamadour
 rognon de veau
 rognons
@@ -1915,6 +1918,7 @@ salsifis
 Sambal Oelek
 sancerre
 sandre
+sandwich
 sang
 sanglier
 sangria
